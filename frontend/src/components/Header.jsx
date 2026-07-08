@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, Moon, Plus, AlertTriangle, User, ShieldCheck, Trash2, X } from 'lucide-react';
+import { Search, Bell, Moon, Plus, AlertTriangle, User, ShieldCheck, Trash2, X, Menu } from 'lucide-react';
 import { getNotifications, clearNotifications } from '../api/analytics';
 
-const Header = () => {
+const Header = ({ onMenuClick }) => {
   const [time, setTime] = useState(new Date());
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -50,15 +50,21 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="h-24 px-6 py-4 flex items-center justify-between w-full bg-white border-b border-blue-50 relative z-30">
+    <header className="h-24 px-4 md:px-6 py-4 flex items-center justify-between w-full bg-white border-b border-blue-50 relative z-30">
       
       {/* Left: District & Health Score */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6">
+        <button 
+          onClick={onMenuClick}
+          className="p-2.5 rounded-xl bg-white border border-blue-100 text-blue-900 hover:bg-blue-50 transition-all md:hidden cursor-pointer"
+        >
+          <Menu className="w-5 h-5 text-blue-900" />
+        </button>
         <div>
-          <h2 className="text-2xl font-bold text-black tracking-wide">
-            Sigma District <span className="text-gray-500 font-normal text-lg">Command</span>
+          <h2 className="text-lg md:text-2xl font-bold text-black tracking-wide">
+            Sigma District <span className="hidden sm:inline text-gray-500 font-normal text-lg">Command</span>
           </h2>
-          <p className="text-xs text-gray-500 font-medium tracking-widest uppercase mt-1">
+          <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-widest uppercase mt-0.5 md:mt-1">
             {time.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>

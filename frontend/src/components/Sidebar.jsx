@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, Users, Archive, Stethoscope, 
   BrainCircuit, BarChart3, ShieldAlert, Truck, 
-  FileText, Siren, Settings, Activity 
+  FileText, Siren, Settings, Activity, X 
 } from 'lucide-react';
 
 const navItems = [
@@ -20,19 +20,29 @@ const navItems = [
   { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ className = '', onClose }) => {
   return (
-    <aside className="hidden md:flex flex-col w-72 h-screen p-4">
+    <aside className={`flex-col w-72 h-screen p-4 ${className}`}>
       <div className="flex flex-col h-full overflow-hidden rounded-[20px] bg-gradient-to-b from-[#1976D2] via-[#1565C0] to-[#0D47A1] border-none shadow-xl text-white">
         
         {/* Brand Logo Area */}
-        <div className="flex items-center gap-3 px-6 py-8 border-b border-white/10">
-          <div className="p-2 rounded-xl bg-white/10 border border-white/20">
-            <Activity className="text-white w-6 h-6 animate-pulse" />
+        <div className="flex items-center justify-between px-6 py-8 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-white/10 border border-white/20">
+              <Activity className="text-white w-6 h-6 animate-pulse" />
+            </div>
+            <h1 className="text-xl font-bold tracking-wider text-white">
+              MY HEALTH <span className="text-white/90">OS</span>
+            </h1>
           </div>
-          <h1 className="text-xl font-bold tracking-wider text-white">
-            MY HEALTH <span className="text-white/90">OS</span>
-          </h1>
+          {onClose && (
+            <button 
+              onClick={onClose}
+              className="md:hidden p-2 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation Links */}
@@ -41,6 +51,7 @@ const Sidebar = () => {
             <NavLink
               key={item.name}
               to={item.path}
+              onClick={onClose}
               className={({ isActive }) => `
                 flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 ease-out group border border-transparent
                 ${isActive 

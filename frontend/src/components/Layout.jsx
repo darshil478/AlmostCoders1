@@ -1,19 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { Bot, Menu } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 const Layout = () => {
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
   return (
     <div className="flex h-screen overflow-hidden bg-white dark:bg-white text-black dark:text-black">
-      {/* Sidebar: Hidden on Mobile, Flex on Desktop */}
+      {/* Desktop Sidebar: Hidden on Mobile, Flex on Desktop */}
       <Sidebar className="hidden md:flex" />
 
+      {/* Mobile Sidebar Overlay Drawer with AnimatePresence */}
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <div className="fixed inset-0 z-50 md:hidden flex">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60"
+            />
+            {/* Sidebar drawer content */}
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="relative z-50 flex h-full"
+            >
+              <Sidebar onClose={() => setIsMobileSidebarOpen(false)} className="flex h-full shadow-2xl" />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       <div className="relative flex flex-col flex-1 overflow-hidden">
-        {/* Header: Adds a Hamburger Menu for mobile */}
-        <Header />
+        {/* Header: Triggers mobile sidebar toggle */}
+        <Header onMenuClick={() => setIsMobileSidebarOpen(true)} />
 
         <main className="w-full h-full overflow-y-auto p-4 md:p-6">
           <motion.div 

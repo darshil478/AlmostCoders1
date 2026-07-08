@@ -128,7 +128,7 @@ const Patients = () => {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full flex-1 min-h-[500px]">
           
           {/* LEFT PANE: Smart Directory */}
-          <div className="xl:col-span-4 flex flex-col gap-4 max-h-[750px]">
+          <div className={`xl:col-span-4 flex flex-col gap-4 max-h-[750px] ${selectedPatient ? 'hidden xl:flex' : 'flex'}`}>
             <div className="glass-panel p-2">
               <div className="relative w-full group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1976D2]" />
@@ -148,13 +148,13 @@ const Patients = () => {
               ) : (
                 filteredPatients.map((p) => (
                   <div 
-                    key={p.id} 
-                    onClick={() => setSelectedPatient(p)}
-                    className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
-                      selectedPatient && selectedPatient.id === p.id 
-                        ? 'bg-[#EEF6FF] border border-blue-200 shadow-sm text-black font-semibold' 
-                        : 'bg-white border border-blue-50/50 hover:bg-[#F8FBFF] text-gray-800'
-                    }`}
+                     key={p.id} 
+                     onClick={() => setSelectedPatient(p)}
+                     className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
+                       selectedPatient && selectedPatient.id === p.id 
+                         ? 'bg-[#EEF6FF] border border-blue-200 shadow-sm text-black font-semibold' 
+                         : 'bg-white border border-blue-50/50 hover:bg-[#F8FBFF] text-gray-800'
+                     }`}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-[#111827] text-base truncate">{p.name}</h3>
@@ -171,33 +171,43 @@ const Patients = () => {
           </div>
 
           {/* RIGHT PANE: Patient Dossier */}
-          <div className="xl:col-span-8 flex flex-col gap-6">
+          <div className={`xl:col-span-8 flex flex-col gap-6 ${selectedPatient ? 'flex' : 'hidden xl:flex'}`}>
             {selectedPatient ? (
               <>
                 {/* ID Card & Demographics */}
                 <div className="glass-panel p-6 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
                   
-                  <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
-                    <div className="flex items-center gap-5">
-                      <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
-                        <UserCircle className="w-8 h-8 text-[#1976D2]" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-[#111827] mb-1">{selectedPatient.name}</h2>
-                        <div className="flex flex-wrap gap-3 text-xs font-semibold">
-                          <span className="text-[#1565C0] border border-blue-200 bg-blue-50 px-2 py-1 rounded-md flex items-center gap-1"><QrCode className="w-3 h-3 text-[#1976D2]"/> Digital Health ID</span>
-                          <span className="text-[#374151] bg-gray-50 border border-gray-100 px-2 py-1 rounded-md">{selectedPatient.age} Yrs</span>
-                          <span className="text-[#374151] bg-gray-50 border border-gray-100 px-2 py-1 rounded-md">Blood: {selectedPatient.blood}</span>
+                  <div className="flex flex-col gap-4 relative z-10">
+                    {/* Mobile Back Button */}
+                    <button 
+                      onClick={() => setSelectedPatient(null)}
+                      className="xl:hidden self-start flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-blue-900 bg-white text-xs font-semibold hover:bg-blue-50 cursor-pointer mb-2"
+                    >
+                      ← Back to Directory
+                    </button>
+
+                    <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                      <div className="flex items-center gap-5">
+                        <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+                          <UserCircle className="w-8 h-8 text-[#1976D2]" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-bold text-[#111827] mb-1">{selectedPatient.name}</h2>
+                          <div className="flex flex-wrap gap-3 text-xs font-semibold">
+                            <span className="text-[#1565C0] border border-blue-200 bg-blue-50 px-2 py-1 rounded-md flex items-center gap-1"><QrCode className="w-3 h-3 text-[#1976D2]"/> Digital Health ID</span>
+                            <span className="text-[#374151] bg-gray-50 border border-gray-100 px-2 py-1 rounded-md">{selectedPatient.age} Yrs</span>
+                            <span className="text-[#374151] bg-gray-50 border border-gray-100 px-2 py-1 rounded-md">Blood: {selectedPatient.blood}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs font-semibold text-[#374151]">
-                      <div className="flex items-center gap-2"><PhoneCall className="w-3 h-3 text-[#1976D2]"/> {selectedPatient.phone}</div>
-                      <div className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#1976D2]"/> {selectedPatient.address}</div>
-                      <div className="flex items-center gap-2"><ShieldAlert className="w-3 h-3 text-red-500"/> {selectedPatient.emergency}</div>
-                      <div className="flex items-center gap-2"><FileCheck className="w-3 h-3 text-emerald-500"/> {selectedPatient.insurance}</div>
+                      
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs font-semibold text-[#374151]">
+                        <div className="flex items-center gap-2"><PhoneCall className="w-3 h-3 text-[#1976D2]"/> {selectedPatient.phone}</div>
+                        <div className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#1976D2]"/> {selectedPatient.address}</div>
+                        <div className="flex items-center gap-2"><ShieldAlert className="w-3 h-3 text-red-500"/> {selectedPatient.emergency}</div>
+                        <div className="flex items-center gap-2"><FileCheck className="w-3 h-3 text-emerald-500"/> {selectedPatient.insurance}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
